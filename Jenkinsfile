@@ -24,7 +24,19 @@ pipeline {
                 }
             }
         }
-        stage('Deliver') {
+
+        stage('SonarQube Analysis') {
+                    steps {
+                        script {
+                            withSonarQubeEnv('sonarqube') {
+        //                        sh "${tool('sonar-scanner')}/bin/sonar-scanner -Dsonar.projectKey=myProjectKey -Dsonar.projectName=myProjectName"
+                                sh 'mvn clean package sonar:sonar'
+                            }
+                        }
+                    }
+                }
+
+        stage('Deploy') {
             steps {
                 sh './jenkins/scripts/deliver.sh'
             }
